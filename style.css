@@ -1,6 +1,25 @@
-@media (max-width: 1000px) {
+@media (max-width: 930px) {
     header {
-        padding: 10px;
+        padding: 20px;
+    }
+    header img {
+        width: 150px;
+    }
+    #social-icons a {
+        font-size: 20px;
+    }
+    h1 {
+        font-size: 40px;
+    }
+    p, form inpunt, form button {
+        font-size: 16px;
+    }
+    form input {
+        padding: 15px 10px;
+        width: 430px;
+    }
+    form button {
+        padding: 15px 10px;
     }
 }
 
@@ -111,4 +130,28 @@ footer img {
 footer p {
     font-size: 12px;
     margin: 0;
+}
+
+@media (max-width: 630px) {
+    form input, form button {
+        font-size: 14px;
+        display: block;
+        width: 380px;
+        margin-bottom: 5px;
+    }
+}
+@media (max-width: 400px) {
+    header img {
+        width: 120px;
+    }
+    #social-icons {
+        font-size: 18px;
+    }
+    h1 {
+        font-size: 30px;
+    }
+    form input, form button {
+        font-size: 12px;
+        width: 320px;
+    }
 }
