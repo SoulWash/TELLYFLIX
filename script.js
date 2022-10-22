@@ -1,31 +1,81 @@
-https://image.tmdb.org/t/p/original/tSxbUnrnWlR5dQvUgqMI7sACmFD.jpg
+const apiUrl = 'https://api.themoviedb.org/3/';
+const apiKey = 'f43a98ed1de78a8b8cd77799f7b683a4';
+const apiLang = 'pt-BR';
+const imgUrl = 'https://image.tmdb.org/t/p/original';
 
-fetch("https://api.themoviedb.org/3/trending/all/day?api_key=f43a98ed1de78a8b8cd77799f7b683a4&language=pt-BR")
-.then(response => {
-    return response.json();
-})
-.then(data => {
-    const randomNumber = Math.floor(Math.random() * 19);
 
-    document.querySelector('#full-page').style.backgoundImage = 'url(https://image.tmdb.org/t/p/original' + data.results[randomNumber].backdrop_path + ')';
+const randomNumber = (size) => {
+    return Math.floor(Math.random() * size);
+}
 
-    const lancamentos = new Date('Jan 1, 2023 09:00:00').getTime();
-    const hoje = new Date().getTime();
 
-    const diferenca = lancamentos - hoje; 
+let type = randomNumber(4);
+type = type % 2 === 0 ? 'movie' : 'tv';
 
-    let days = diferenca / (1000 * 60 * 60 * 24);
+fetch(`${apiUrl}trending/${type}/day?api_key=${apiKey}&language=${apiLang}`)
+    .then(response => {
+        return response.json();
+    })
+    .then(data => {
+        let show = randomNumber(data.results.length);
+
+        const showName = !data.results[show].title ? data.results[show].name : data.results[show].title;
+        document.querySelector('#show-name').innerText = "" + showName;
+
+        const backgroundImg = imgUrl + data.results[show].backdrop_path;
+        document.querySelector('#full-page').style.backgroundImage = 'linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url(' + backgroundImg+ ')';
+    })
+    .catch(error => {
+        console.log('Error: ' + error.message);
+    })
+
+const launchDate = new Date("Jan 1, 2023 09:00:00").getTime();
+
+const interval = () => {
+    const timeNow = new Date().getTime();
+    const timeDifference = launchDate - timeNow;
+
+    let days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+    days = days < 10 ? '0' + days : days;
+
+    let hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    hours = hours < 10 ? '0' + hours : hours;
+
+    let minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
+    minutes = minutes < 10 ? '0' + minutes : minutes
+
+    let  seconds = Math.floor((timeDifference % (1000 * 60)) / (1000));
+    seconds = seconds < 10 ? '0' + seconds : seconds 
     
-    let hours = (diferenca % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60);
+    document.querySelector('#time-left').innerHTML = `
+                                            <ul>
+                                                <li>
+                                                    <span class="time-num">${days}</span>
+                                                    <span class="time-txt">dias</span>
+                                                </li>
+                                                <li>
+                                                <span class="time-num">${hours}</span>
+                                                <span class="time-txt">horas</span>
+                                            </li>
+                                            <li>
+                                            <span class="time-num">${minutes}</span>
+                                            <span class="time-txt">minutos</span>
+                                        </li>
+                                        <li>
+                                        <span class="time-num">${seconds}</span>
+                                        <span class="time-txt">segundos</span>
+                                    </li>
+                                            </ul>`;
 
-    let min = (diferenca % (1000 * 60 * 60) / (1000 * 60));
+   if (timeDifference < 0 ) {
+        clearInterval(interval);
+        document.querySelector('#time-left').innerHTML = "Tempo Finalizado!";
+   }
+}
+setInterval(interval, 1000);
 
-    let sec = (diferenca % (1000 * 60) / (1000 * 60));
 
 
-    document.querySelector('#time-left').innerHTML = `<ul><li>${days}</li><li>${hours}</li><li>${min}</li><li>${sec}</li>`
 
-
-})
 
 
